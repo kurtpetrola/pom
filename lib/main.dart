@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/services/notification_service.dart';
 import 'core/services/storage_service.dart';
 import 'core/theme/app_theme.dart';
 import 'features/settings/application/settings_controller.dart';
@@ -13,10 +14,15 @@ void main() async {
   // Initialize shared preferences synchronously before runApp
   final prefs = await SharedPreferences.getInstance();
 
+  // Initialize notification plugin so alerts work on all platforms
+  final notificationService = NotificationService();
+  await notificationService.init();
+
   runApp(
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
+        notificationServiceProvider.overrideWithValue(notificationService),
       ],
       child: const PomodoroApp(),
     ),
