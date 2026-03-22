@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final audioServiceProvider = Provider<AudioService>((ref) {
@@ -5,7 +6,13 @@ final audioServiceProvider = Provider<AudioService>((ref) {
 });
 
 class AudioService {
+  final AudioPlayer _player = AudioPlayer();
+
   Future<void> playAlert() async {
-    // Expected to play alert.mp3 here.
+    await _player.play(AssetSource('sounds/alert.mp3'));
+  }
+
+  void dispose() {
+    _player.dispose();
   }
 }
