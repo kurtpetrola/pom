@@ -14,6 +14,12 @@ class MockAudioService extends AudioService {
 class MockNotificationService extends NotificationService {
   @override
   Future<void> showSessionCompleteNotification({required String title, required String body}) async {}
+
+  @override
+  Future<void> scheduleTimerNotification({required DateTime endTime, required String timerTitle}) async {}
+
+  @override
+  Future<void> cancelScheduledNotifications() async {}
 }
 
 void main() {

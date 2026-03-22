@@ -63,12 +63,14 @@ class PomodoroState {
   final int currentIndex;
   final Duration timeLeft;
   final bool isRunning;
+  final DateTime? endTime;
 
   const PomodoroState({
     required this.queue,
     required this.currentIndex,
     required this.timeLeft,
     required this.isRunning,
+    this.endTime,
   });
 
   PomodoroState copyWith({
@@ -76,12 +78,14 @@ class PomodoroState {
     int? currentIndex,
     Duration? timeLeft,
     bool? isRunning,
+    DateTime? Function()? endTime,
   }) {
     return PomodoroState(
       queue: queue ?? this.queue,
       currentIndex: currentIndex ?? this.currentIndex,
       timeLeft: timeLeft ?? this.timeLeft,
       isRunning: isRunning ?? this.isRunning,
+      endTime: endTime != null ? endTime() : this.endTime,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_theme.dart';
@@ -7,6 +8,29 @@ import '../application/settings_controller.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
+
+  Future<void> _openNotificationSettings(BuildContext context) async {
+    final plugin = FlutterLocalNotificationsPlugin();
+    final androidPlugin = plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+    if (androidPlugin != null) {
+      final areEnabled = await androidPlugin.areNotificationsEnabled() ?? false;
+      if (areEnabled) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Notifications are already enabled'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+        return;
+      }
+      await androidPlugin.requestNotificationsPermission();
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -116,6 +140,46 @@ class SettingsScreen extends ConsumerWidget {
               value: settings.enableNotifications,
               onChanged: controller.updateNotifications,
             ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Expanded(
+                  child: Text(
+                    'System notification permission:',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textDark,
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    _openNotificationSettings(context);
+                  },
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppTheme.textDark),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      'Open',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textDark,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
 
             const SizedBox(height: 32),
             const _SectionHeader(title: 'Pomodoro'),
@@ -149,7 +213,10 @@ class SettingsScreen extends ConsumerWidget {
                   },
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: AppTheme.textDark),
                       borderRadius: BorderRadius.circular(20),
@@ -259,7 +326,9 @@ class _TogglePill extends StatelessWidget {
           _ToggleSide(
             label: 'Yes',
             isSelected: value,
-            borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
+            borderRadius: const BorderRadius.horizontal(
+              left: Radius.circular(20),
+            ),
             onTap: () {
               HapticFeedback.lightImpact();
               onChanged(true);
@@ -268,7 +337,9 @@ class _TogglePill extends StatelessWidget {
           _ToggleSide(
             label: 'No',
             isSelected: !value,
-            borderRadius: const BorderRadius.horizontal(right: Radius.circular(20)),
+            borderRadius: const BorderRadius.horizontal(
+              right: Radius.circular(20),
+            ),
             onTap: () {
               HapticFeedback.lightImpact();
               onChanged(false);

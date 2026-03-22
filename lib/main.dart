@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest_all.dart' as tz_data;
+import 'package:timezone/timezone.dart' as tz;
 
+import 'core/services/app_lifecycle_observer.dart';
 import 'core/services/notification_service.dart';
 import 'core/services/storage_service.dart';
 import 'core/theme/app_theme.dart';
@@ -10,7 +14,12 @@ import 'features/timer/presentation/timer_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
+  // Initialize timezone data and set local timezone (required for scheduled notifications)
+  tz_data.initializeTimeZones();
+  final timeZoneInfo = await FlutterTimezone.getLocalTimezone();
+  tz.setLocalLocation(tz.getLocation(timeZoneInfo.identifier));
+
   // Initialize shared preferences synchronously before runApp
   final prefs = await SharedPreferences.getInstance();
 
@@ -41,8 +50,7 @@ class PomodoroApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       title: 'Pom',
       theme: AppTheme.getTheme(primaryColor),
-      home: const TimerScreen(),
+      home: const AppLifecycleObserver(child: TimerScreen()),
     );
   }
 }
-
