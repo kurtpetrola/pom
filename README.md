@@ -1,17 +1,41 @@
-# pom
+# Pom
 
-A new Flutter project.
+A minimalist, distraction-free Pomodoro timer app built with Flutter.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Playlist-style timer queue** — Stack work phases, short breaks, and long breaks in any order
+- **Drag-to-reorder** — Rearrange your timer queue on the fly
+- **Editable timers** — Tap to rename or adjust duration of any timer
+- **Background notifications** — Get notified when a timer completes, even when minimized
+- **Alert chime** — Audio alert on timer completion
+- **Theme colors** — Choose from Green, Yellow, Red, Violet, or Blue accent
+- **Persistent state** — Your timer queue and settings survive app restarts
 
-A few resources to get you started if this is your first Flutter project:
+## Tech Stack
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+- **Flutter** + **Dart**
+- **Riverpod** — State management
+- **SharedPreferences** — Local persistence
+- **flutter_local_notifications** — Scheduled & immediate notifications
+- **audioplayers** — Completion alert sound
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Project Structure
+
+```
+lib/
+├── core/
+│   ├── theme/          # Colors, theme builder
+│   ├── utils/          # Time formatter
+│   └── services/       # Audio, notifications, lifecycle, clock, storage
+├── features/
+│   ├── timer/          # Timer controller, state, screen, widgets
+│   └── settings/       # Settings controller, state, screen
+└── main.dart
+```
+
+> **Note:** The goal of this app was to also test out SKILL.md and its effectiveness in AI-assisted app development.
+
+## License
+
+This project is licensed under the **MIT License** - see the **[LICENSE](https://github.com/kurtpetrola/pom/blob/main/LICENSE)** file for details.
