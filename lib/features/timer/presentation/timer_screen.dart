@@ -105,61 +105,17 @@ class TimerScreen extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      HapticFeedback.lightImpact();
-                      controller.toggleTimer();
-                    },
-                    icon: Icon(primaryBtnIcon, color: AppTheme.textDark),
-                    label: Text(
-                      primaryBtnLabel,
-                      style: const TextStyle(
-                        color: AppTheme.textDark,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(
-                        color: AppTheme.textDark,
-                        width: 2,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                    ),
+                  _buildActionButton(
+                    icon: primaryBtnIcon,
+                    label: primaryBtnLabel,
+                    onPressed: controller.toggleTimer,
                   ),
                   if (!isPristine || state.isRunning) ...[
                     const SizedBox(width: 8),
-                    OutlinedButton.icon(
-                      onPressed: () {
-                        HapticFeedback.lightImpact();
-                        controller.reset();
-                      },
-                      icon: const Icon(Icons.stop, color: AppTheme.textDark),
-                      label: const Text(
-                        'Stop',
-                        style: TextStyle(
-                          color: AppTheme.textDark,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(
-                          color: AppTheme.textDark,
-                          width: 2,
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
+                    _buildActionButton(
+                      icon: Icons.stop,
+                      label: 'Stop',
+                      onPressed: controller.reset,
                     ),
                   ],
                 ],
@@ -187,6 +143,34 @@ class TimerScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
         ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return OutlinedButton.icon(
+      onPressed: () {
+        HapticFeedback.lightImpact();
+        onPressed();
+      },
+      icon: Icon(icon, color: AppTheme.textDark),
+      label: Text(
+        label,
+        style: const TextStyle(
+          color: AppTheme.textDark,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      style: OutlinedButton.styleFrom(
+        side: const BorderSide(color: AppTheme.textDark, width: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
       ),
     );
   }
