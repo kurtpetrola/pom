@@ -4,8 +4,10 @@ import '../domain/pomodoro_settings.dart';
 
 export '../domain/pomodoro_settings.dart';
 
-final settingsControllerProvider = NotifierProvider<SettingsController, PomodoroSettings>(SettingsController.new);
-final settingsProvider = settingsControllerProvider;
+final settingsControllerProvider =
+    NotifierProvider<SettingsController, PomodoroSettings>(
+      SettingsController.new,
+    );
 
 class SettingsController extends Notifier<PomodoroSettings> {
   @override
@@ -33,16 +35,20 @@ class SettingsController extends Notifier<PomodoroSettings> {
   }
 
   void updateConfirmation(bool enabled) {
-    ref.read(sharedPreferencesProvider).setBool('confirmBeforeNextTimer', enabled);
+    ref
+        .read(sharedPreferencesProvider)
+        .setBool('confirmBeforeNextTimer', enabled);
     state = state.copyWith(confirmBeforeNextTimer: enabled);
   }
 
   void updateSound(bool enabled) {
-    ref.read(sharedPreferencesProvider).setBool('playSoundWhenCompleted', enabled);
+    ref
+        .read(sharedPreferencesProvider)
+        .setBool('playSoundWhenCompleted', enabled);
     state = state.copyWith(playSoundWhenCompleted: enabled);
   }
 
-  // Keep existing methods for backward compatibility or future use if needed, 
+  // Keep existing methods for backward compatibility or future use if needed,
   // though they are not in the primary UI now.
   void updateWorkDuration(int minutes) {
     ref.read(sharedPreferencesProvider).setInt('workDurationMinutes', minutes);
@@ -54,7 +60,7 @@ class SettingsController extends Notifier<PomodoroSettings> {
     prefs.setInt('workDurationMinutes', 25);
     prefs.setInt('shortBreakDurationMinutes', 5);
     prefs.setInt('longBreakDurationMinutes', 15);
-    
+
     state = state.copyWith(
       workDurationMinutes: 25,
       shortBreakDurationMinutes: 5,
