@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Palette base colors
-  static const Color charcoalDark = Color(0xFF0F0F0F);
+  static const Color charcoalDark = Color(0xFF121212);
   static const Color charcoalLight = Color(0xFF1E1E1E);
   static const Color textDark = Color(0xFF111111);
   static const Color textLight = Color(0xFFF0F0F0);
   static const Color errorRed = Color(0xFFE53935);
 
-  // Theme Color Options
-  static const Color green = Color(0xFF71A986);
-  static const Color yellow = Color(0xFFD4A373);
-  static const Color red = Color(0xFFBD5D5D);
-  static const Color violet = Color(0xFF8E7AB5);
-  static const Color blue = Color(0xFF7EA1C4);
+  // Theme Color Options - Muted/Premium versions
+  static const Color green = Color(0xFF8BA888);
+  static const Color yellow = Color(0xFFD4B483);
+  static const Color red = Color(0xFFC17C7C);
+  static const Color violet = Color(0xFF9B8BB9);
+  static const Color blue = Color(0xFF8FAECB);
 
   static Color getColorFromName(String name) {
     switch (name.toLowerCase()) {
@@ -32,35 +33,35 @@ class AppTheme {
   }
 
   static ThemeData getTheme(Color primaryColor) {
-    return ThemeData(
-      brightness: Brightness.dark,
+    final baseTheme = ThemeData(brightness: Brightness.dark);
+    
+    return baseTheme.copyWith(
       scaffoldBackgroundColor: primaryColor,
       primaryColor: primaryColor,
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          fontSize: 120,
-          fontWeight: FontWeight.w600,
+      textTheme: GoogleFonts.lexendDecaTextTheme(baseTheme.textTheme).copyWith(
+        displayLarge: GoogleFonts.lexendDeca(
+          fontSize: 100,
+          fontWeight: FontWeight.w700,
           color: textDark,
-          letterSpacing: -2,
-          fontFamily: 'Inter',
+          letterSpacing: -4,
         ),
-        headlineSmall: TextStyle(
+        headlineSmall: GoogleFonts.lexendDeca(
           fontSize: 20,
           fontWeight: FontWeight.w600,
           color: textDark,
-          letterSpacing: 1.5,
+          letterSpacing: 0.5,
         ),
-        titleMedium: TextStyle(
+        titleMedium: GoogleFonts.lexendDeca(
           fontSize: 18,
           fontWeight: FontWeight.w600,
           color: textLight,
         ),
-        bodyMedium: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
+        bodyMedium: GoogleFonts.lexendDeca(
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
           color: textLight,
         ),
-        labelLarge: TextStyle(
+        labelLarge: GoogleFonts.lexendDeca(
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: textDark,
@@ -70,21 +71,26 @@ class AppTheme {
         color: textDark,
         size: 24,
       ),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        iconTheme: IconThemeData(color: textDark),
-        titleTextStyle: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
+        centerTitle: false,
+        iconTheme: const IconThemeData(color: textDark),
+        titleTextStyle: GoogleFonts.lexendDeca(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
           color: textDark,
-          letterSpacing: 1.2,
+          letterSpacing: 1.0,
         ),
+      ),
+      dividerTheme: DividerThemeData(
+        color: textDark.withValues(alpha: 0.1),
+        thickness: 1,
+        space: 32,
       ),
     );
   }
 
-  // Keep for backward compatibility if needed, but deprecated
   static Color get brandGreen => green;
   static ThemeData get theme => getTheme(green);
 }

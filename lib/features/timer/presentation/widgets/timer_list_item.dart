@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:ui';
 
 import '../../domain/timer_state.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -7,6 +8,7 @@ import '../../../../core/theme/app_theme.dart';
 class TimerListItem extends StatefulWidget {
   final TimerItem item;
   final bool isCurrent;
+  final bool isRunning;
   final VoidCallback onRemove;
   final ValueChanged<String> onTitleChanged;
   final ValueChanged<Duration> onDurationChanged;
@@ -15,6 +17,7 @@ class TimerListItem extends StatefulWidget {
     super.key,
     required this.item,
     required this.isCurrent,
+    required this.isRunning,
     required this.onRemove,
     required this.onTitleChanged,
     required this.onDurationChanged,
@@ -24,11 +27,13 @@ class TimerListItem extends StatefulWidget {
   State<TimerListItem> createState() => _TimerListItemState();
 }
 
-class _TimerListItemState extends State<TimerListItem> {
+class _TimerListItemState extends State<TimerListItem> with SingleTickerProviderStateMixin {
   late TextEditingController _titleController;
   late TextEditingController _durationController;
   final FocusNode _focusNode = FocusNode();
   final FocusNode _durationFocusNode = FocusNode();
+  late AnimationController _blinkController;
+  late Animation<double> _blinkAnimation;
 
   @override
   void initState() {
@@ -49,6 +54,29 @@ class _TimerListItemState extends State<TimerListItem> {
         _submitDuration();
       }
     });
+
+    _blinkController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+    _blinkAnimation = Tween<double>(begin: 1.0, end: 0.3).animate(
+      CurvedAnimation(parent: _blinkController, curve: Curves.easeInOut),
+    );
+
+    _updateBlinkState();
+  }
+
+  void _updateBlinkState() {
+    final shouldBlink = widget.isCurrent && !widget.isRunning && !widget.item.isCompleted &&
+        widget.item.duration != Duration.zero; // Simple check for "started but paused" is usually done via timeLeft != duration, but we don't have timeLeft here.
+    // Wait, we need to know if the timer is paused. 
+    // Actually, in the list item, if it's CURRENT and NOT RUNNING, it's paused.
+    if (shouldBlink) {
+      _blinkController.repeat(reverse: true);
+    } else {
+      _blinkController.stop();
+      _blinkController.value = 0; // 0 for the animation means 1.0 opacity (value=0 -> begin=1.0)
+    }
   }
 
   void _submitDuration() {
@@ -71,6 +99,9 @@ class _TimerListItemState extends State<TimerListItem> {
         _durationController.text != widget.item.duration.inMinutes.toString()) {
       _durationController.text = widget.item.duration.inMinutes.toString();
     }
+    if (oldWidget.isRunning != widget.isRunning || oldWidget.isCurrent != widget.isCurrent) {
+      _updateBlinkState();
+    }
   }
 
   @override
@@ -79,45 +110,50 @@ class _TimerListItemState extends State<TimerListItem> {
     _durationController.dispose();
     _focusNode.dispose();
     _durationFocusNode.dispose();
+    _blinkController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
-        color: AppTheme.charcoalDark,
+        color: Colors.transparent,
         border: Border(
-          bottom: BorderSide(color: Colors.white.withValues(alpha: 0.05)),
+          bottom: BorderSide(
+            color: Colors.white.withValues(alpha: 0.05),
+            width: 1,
+          ),
         ),
       ),
       child: Row(
         children: [
-          // Drag handle
-          const Icon(Icons.menu, color: Colors.white30, size: 24),
-          const SizedBox(width: 16),
+          // Subtler Drag Handle
+          const Icon(Icons.drag_indicator_rounded, color: Colors.white10, size: 20),
+          const SizedBox(width: 12),
 
-          // Title Input
+          // Title Input - No background for a cleaner look
           Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppTheme.charcoalLight,
-                borderRadius: BorderRadius.circular(4),
-              ),
+            child: FadeTransition(
+              opacity: _blinkAnimation,
               child: EditableText(
                 controller: _titleController,
                 focusNode: _focusNode,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: widget.isCurrent ? Theme.of(context).primaryColor : Colors.white,
+                style: theme.textTheme.bodyMedium!.copyWith(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: widget.isCurrent 
+                    ? theme.primaryColor 
+                    : AppTheme.textLight.withValues(alpha: 0.9),
                   decoration: widget.item.isCompleted
                       ? TextDecoration.lineThrough
                       : null,
                 ),
-                cursorColor: Theme.of(context).primaryColor,
+                cursorColor: theme.primaryColor,
                 backgroundCursorColor: AppTheme.charcoalLight,
                 onSubmitted: (_) {
                   _focusNode.unfocus();
@@ -127,57 +163,65 @@ class _TimerListItemState extends State<TimerListItem> {
             ),
           ),
 
-          const SizedBox(width: 16),
+          if (widget.isCurrent && widget.isRunning) ...[
+            const SizedBox(width: 8),
+            SizedBox(
+              width: 14,
+              height: 14,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor.withValues(alpha: 0.8)),
+              ),
+            ),
+          ],
+
+          const SizedBox(width: 12),
 
           // Duration Input
           IntrinsicWidth(
-            child: EditableText(
-              controller: _durationController,
-              focusNode: _durationFocusNode,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-                fontFeatures: [FontFeature.tabularFigures()],
+            child: FadeTransition(
+              opacity: _blinkAnimation,
+              child: EditableText(
+                controller: _durationController,
+                focusNode: _durationFocusNode,
+                style: theme.textTheme.titleMedium!.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: AppTheme.textLight.withValues(alpha: 0.9),
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+                cursorColor: theme.primaryColor,
+                backgroundCursorColor: AppTheme.charcoalLight,
+                keyboardType: TextInputType.number,
+                onSubmitted: (_) {
+                  _durationFocusNode.unfocus();
+                  _submitDuration();
+                },
               ),
-              cursorColor: Theme.of(context).primaryColor,
-              backgroundCursorColor: AppTheme.charcoalLight,
-              keyboardType: TextInputType.number,
-              onSubmitted: (_) {
-                _durationFocusNode.unfocus();
-                _submitDuration();
-              },
             ),
           ),
-          const Text(
+          Text(
             ':00',
-            style: TextStyle(
-              fontSize: 20,
+            style: theme.textTheme.titleMedium!.copyWith(
+              fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: Colors.white54,
-              fontFeatures: [FontFeature.tabularFigures()],
+              color: AppTheme.textLight.withValues(alpha: 0.2),
+              fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
 
           const SizedBox(width: 16),
 
-          // Delete Button
+          // Delete Button - Muted style
           GestureDetector(
             onTap: () {
               HapticFeedback.lightImpact();
               widget.onRemove();
             },
-            child: Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: AppTheme.errorRed, width: 2),
-              ),
-              child: const Icon(
-                Icons.close,
-                color: AppTheme.errorRed,
-                size: 16,
-              ),
+            child: Icon(
+              Icons.close_rounded,
+              color: AppTheme.textLight.withValues(alpha: 0.1),
+              size: 20,
             ),
           ),
         ],
