@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:ui';
 
-import '../../domain/timer_state.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../domain/timer_state.dart';
 
 class TimerListItem extends StatefulWidget {
   final TimerItem item;

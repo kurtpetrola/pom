@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/time_formatter.dart';
+import '../../settings/presentation/settings_screen.dart';
 import '../application/timer_controller.dart';
 import '../domain/timer_state.dart';
-import '../../settings/presentation/settings_screen.dart';
 import 'widgets/timer_list_item.dart';
 
 class TimerScreen extends ConsumerStatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../services/notification_service.dart';
-import '../../features/timer/application/timer_controller.dart';
 import '../../features/settings/application/settings_controller.dart';
+import '../../features/timer/application/timer_controller.dart';
+import '../services/notification_service.dart';
 
 /// Observes app lifecycle changes to schedule/cancel background notifications.
 ///
