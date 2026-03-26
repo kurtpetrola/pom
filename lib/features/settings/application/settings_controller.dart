@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/services/storage_service.dart';
+import '../../timer/application/timer_controller.dart';
 import '../domain/pomodoro_settings.dart';
 
 export '../domain/pomodoro_settings.dart';
@@ -66,5 +67,7 @@ class SettingsController extends Notifier<PomodoroSettings> {
       shortBreakDurationMinutes: 5,
       longBreakDurationMinutes: 15,
     );
+
+    ref.read(timerControllerProvider.notifier).resetToDefaults();
   }
 }

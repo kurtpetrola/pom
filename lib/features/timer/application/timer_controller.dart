@@ -183,6 +183,21 @@ class TimerController extends Notifier<PomodoroState> {
     );
   }
 
+  void resetToDefaults() {
+    _ticker?.cancel();
+
+    final defaultQueue = _generateDefaultQueue();
+    _saveQueue(defaultQueue);
+
+    state = PomodoroState(
+      queue: defaultQueue,
+      currentIndex: 0,
+      timeLeft: defaultQueue.first.duration,
+      isRunning: false,
+      endTime: null,
+    );
+  }
+
   void _completePhase() {
     _ticker?.cancel();
 
