@@ -61,8 +61,13 @@ class _TimerScreenState extends ConsumerState<TimerScreen> with SingleTickerProv
     final state = ref.watch(timerControllerProvider);
     final controller = ref.read(timerControllerProvider.notifier);
     final theme = Theme.of(context);
-    
-    _updateBlinkState(state);
+
+    // Update blink animation safely outside the build phase.
+    // ref.listen fires after rebuild, avoiding use-after-dispose crashes
+    // when rapidly navigating between screens.
+    ref.listen(timerControllerProvider, (_, next) {
+      if (mounted) _updateBlinkState(next);
+    });
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
