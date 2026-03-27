@@ -127,7 +127,6 @@ class _TimerScreenState extends ConsumerState<TimerScreen> with SingleTickerProv
                       'Pom',
                       style: theme.textTheme.labelLarge?.copyWith(
                         letterSpacing: 2,
-                        fontSize: 14,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
@@ -231,10 +230,9 @@ class _TimerScreenState extends ConsumerState<TimerScreen> with SingleTickerProv
       icon: Icon(icon, color: AppTheme.textDark, size: 20),
       label: Text(
         label,
-        style: const TextStyle(
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
           color: AppTheme.textDark,
           fontWeight: FontWeight.w700,
-          fontSize: 14,
         ),
       ),
       style: OutlinedButton.styleFrom(
@@ -301,7 +299,6 @@ class _TimerScreenState extends ConsumerState<TimerScreen> with SingleTickerProv
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: Colors.white24,
                     letterSpacing: 3,
-                    fontSize: 12,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -311,7 +308,6 @@ class _TimerScreenState extends ConsumerState<TimerScreen> with SingleTickerProv
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.primaryColor.withValues(alpha: 0.8),
                       fontWeight: FontWeight.w700,
-                      fontSize: 13,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),

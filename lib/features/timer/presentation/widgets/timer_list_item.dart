@@ -144,7 +144,6 @@ class _TimerListItemState extends State<TimerListItem> with SingleTickerProvider
                 focusNode: _focusNode,
                 style: theme.textTheme.bodyMedium!.copyWith(
                   fontWeight: FontWeight.w500,
-                  fontSize: 16,
                   color: widget.isCurrent 
                     ? theme.primaryColor 
                     : AppTheme.textLight.withValues(alpha: 0.9),
@@ -184,7 +183,6 @@ class _TimerListItemState extends State<TimerListItem> with SingleTickerProvider
                 controller: _durationController,
                 focusNode: _durationFocusNode,
                 style: theme.textTheme.titleMedium!.copyWith(
-                  fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: AppTheme.textLight.withValues(alpha: 0.9),
                   fontFeatures: const [FontFeature.tabularFigures()],
@@ -202,7 +200,6 @@ class _TimerListItemState extends State<TimerListItem> with SingleTickerProvider
           Text(
             ':00',
             style: theme.textTheme.titleMedium!.copyWith(
-              fontSize: 18,
               fontWeight: FontWeight.w700,
               color: AppTheme.textLight.withValues(alpha: 0.2),
               fontFeatures: const [FontFeature.tabularFigures()],

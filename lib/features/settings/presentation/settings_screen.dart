@@ -52,7 +52,6 @@ class SettingsScreen extends ConsumerWidget {
           'Settings',
           style: theme.textTheme.labelLarge?.copyWith(
             letterSpacing: 1.5,
-            fontSize: 14,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -69,7 +68,6 @@ class SettingsScreen extends ConsumerWidget {
                 Text(
                   'Theme',
                   style: theme.textTheme.headlineSmall?.copyWith(
-                    fontSize: 18,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -133,21 +131,24 @@ class SettingsScreen extends ConsumerWidget {
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: AppTheme.textDark.withValues(alpha: 0.7),
                       fontWeight: FontWeight.w600,
-                      fontSize: 15,
                     ),
                   ),
                 ),
-                TextButton(
+                OutlinedButton(
                   onPressed: () {
                     HapticFeedback.lightImpact();
                     _openNotificationSettings(context);
                   },
-                  child: const Text(
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: AppTheme.textDark.withValues(alpha: 0.2)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                  ),
+                  child: Text(
                     'Configure',
-                    style: TextStyle(
+                    style: theme.textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.w800,
                       color: AppTheme.textDark,
-                      fontSize: 13,
                     ),
                   ),
                 ),
@@ -176,25 +177,31 @@ class SettingsScreen extends ConsumerWidget {
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: AppTheme.textDark.withValues(alpha: 0.7),
                     fontWeight: FontWeight.w600,
-                    fontSize: 15,
                   ),
                 ),
                 OutlinedButton(
                   onPressed: () {
                     HapticFeedback.lightImpact();
                     controller.resetPomodoroSettings();
+                    ScaffoldMessenger.of(context)
+                      ..clearSnackBars()
+                      ..showSnackBar(
+                        const SnackBar(
+                          content: Text('Timers reset to default'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: AppTheme.textDark.withValues(alpha: 0.2)),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Reset',
-                    style: TextStyle(
+                    style: theme.textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.w800,
                       color: AppTheme.textDark,
-                      fontSize: 12,
                     ),
                   ),
                 ),
@@ -208,7 +215,6 @@ class SettingsScreen extends ConsumerWidget {
                 child: Text(
                   'Pom v1.0.0',
                   style: theme.textTheme.labelLarge?.copyWith(
-                    fontSize: 12,
                     fontWeight: FontWeight.w800,
                     letterSpacing: 2,
                   ),
@@ -238,7 +244,6 @@ class _SectionHeader extends StatelessWidget {
           Text(
             title,
             style: theme.textTheme.headlineSmall?.copyWith(
-              fontSize: 22,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -280,7 +285,6 @@ class _SettingToggleRow extends StatelessWidget {
             style: theme.textTheme.bodyMedium?.copyWith(
               color: AppTheme.textDark.withValues(alpha: 0.7),
               fontWeight: FontWeight.w600,
-              fontSize: 16,
             ),
           ),
         ),
@@ -366,10 +370,9 @@ class _ThemePill extends StatelessWidget {
           ),
           child: Text(
             label,
-            style: TextStyle(
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: isSelected ? color : AppTheme.textDark.withValues(alpha: 0.6),
               fontWeight: FontWeight.w800,
-              fontSize: 13,
             ),
           ),
         ),
