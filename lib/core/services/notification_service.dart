@@ -105,11 +105,11 @@ class NotificationService {
     required DateTime endTime,
   }) async {
     final androidDetails = AndroidNotificationDetails(
-      'pomodoro_ongoing_channel',
+      'pomodoro_ongoing_channel_v2',
       'Timer Progress',
       channelDescription: 'Shows active timer progress while app is minimized',
-      importance: Importance.low,
-      priority: Priority.low,
+      importance: Importance.defaultImportance,
+      priority: Priority.defaultPriority,
       ongoing: true,
       autoCancel: false,
       showWhen: true,
@@ -119,6 +119,7 @@ class NotificationService {
       playSound: false,
       enableVibration: false,
       silent: true,
+      visibility: NotificationVisibility.public,
     );
     final details = NotificationDetails(android: androidDetails);
 
