@@ -208,6 +208,48 @@ class SettingsScreen extends ConsumerWidget {
               ],
             ),
 
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    'Restart completed timers',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: AppTheme.textDark.withValues(alpha: 0.7),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                OutlinedButton(
+                  onPressed: () {
+                    HapticFeedback.lightImpact();
+                    controller.restartTimers();
+                    ScaffoldMessenger.of(context)
+                      ..clearSnackBars()
+                      ..showSnackBar(
+                        const SnackBar(
+                          content: Text('Timers restarted'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: AppTheme.textDark.withValues(alpha: 0.2)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                  ),
+                  child: Text(
+                    'Restart',
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: AppTheme.textDark,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
             const SizedBox(height: 80),
             Center(
               child: Opacity(

@@ -70,4 +70,8 @@ class SettingsController extends Notifier<PomodoroSettings> {
 
     ref.read(timerControllerProvider.notifier).resetToDefaults();
   }
+
+  void restartTimers() {
+    ref.read(timerControllerProvider.notifier).resetQueue();
+  }
 }
