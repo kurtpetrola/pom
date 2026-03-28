@@ -9,8 +9,10 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
 class NotificationService {
   static const int _immediateNotificationId = 0;
   static const int _scheduledNotificationId = 1;
+  static const int _ongoingNotificationId = 2;
 
-  final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _plugin =
+      FlutterLocalNotificationsPlugin();
 
   Future<void> init() async {
     const androidConfig = AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -19,20 +21,26 @@ class NotificationService {
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
-    const initSettings = InitializationSettings(android: androidConfig, iOS: darwinConfig);
-    await _plugin.initialize(
-      settings: initSettings,
+    const initSettings = InitializationSettings(
+      android: androidConfig,
+      iOS: darwinConfig,
     );
+    await _plugin.initialize(settings: initSettings);
 
     // Request notification permission on Android 13+ (API 33+)
-    final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+    final androidPlugin = _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
     if (androidPlugin != null) {
       await androidPlugin.requestNotificationsPermission();
     }
   }
 
-  Future<void> showSessionCompleteNotification({required String title, required String body}) async {
+  Future<void> showSessionCompleteNotification({
+    required String title,
+    required String body,
+  }) async {
     const androidDetails = AndroidNotificationDetails(
       'pomodoro_channel',
       'Pomodoro Timer',
@@ -41,7 +49,10 @@ class NotificationService {
       priority: Priority.high,
     );
     const darwinDetails = DarwinNotificationDetails();
-    const details = NotificationDetails(android: androidDetails, iOS: darwinDetails);
+    const details = NotificationDetails(
+      android: androidDetails,
+      iOS: darwinDetails,
+    );
 
     await _plugin.show(
       id: _immediateNotificationId,
@@ -69,7 +80,10 @@ class NotificationService {
       priority: Priority.high,
     );
     const darwinDetails = DarwinNotificationDetails();
-    const details = NotificationDetails(android: androidDetails, iOS: darwinDetails);
+    const details = NotificationDetails(
+      android: androidDetails,
+      iOS: darwinDetails,
+    );
 
     await _plugin.zonedSchedule(
       id: _scheduledNotificationId,
@@ -81,8 +95,53 @@ class NotificationService {
     );
   }
 
+  /// Show a silent ongoing notification with a live countdown while the app is
+  /// minimized and a timer is running.
+  ///
+  /// Uses Android's native chronometer in countdown mode so the notification
+  /// updates automatically with zero Dart engine overhead.
+  Future<void> showOngoingTimerNotification({
+    required String timerTitle,
+    required DateTime endTime,
+  }) async {
+    final androidDetails = AndroidNotificationDetails(
+      'pomodoro_ongoing_channel',
+      'Timer Progress',
+      channelDescription: 'Shows active timer progress while app is minimized',
+      importance: Importance.low,
+      priority: Priority.low,
+      ongoing: true,
+      autoCancel: false,
+      showWhen: true,
+      usesChronometer: true,
+      chronometerCountDown: true,
+      when: endTime.millisecondsSinceEpoch,
+      playSound: false,
+      enableVibration: false,
+      silent: true,
+    );
+    final details = NotificationDetails(android: androidDetails);
+
+    await _plugin.show(
+      id: _ongoingNotificationId,
+      title: timerTitle,
+      body: 'Timer running',
+      notificationDetails: details,
+    );
+  }
+
+  /// Cancel the ongoing timer notification.
+  Future<void> cancelOngoingNotification() async {
+    await _plugin.cancel(id: _ongoingNotificationId);
+  }
+
   /// Cancel any scheduled background notification.
   Future<void> cancelScheduledNotifications() async {
     await _plugin.cancel(id: _scheduledNotificationId);
+  }
+
+  /// Cancel all notifications (ongoing + scheduled).
+  Future<void> cancelAllNotifications() async {
+    await _plugin.cancelAll();
   }
 }

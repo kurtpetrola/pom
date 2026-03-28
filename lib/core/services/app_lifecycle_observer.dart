@@ -15,7 +15,8 @@ class AppLifecycleObserver extends ConsumerStatefulWidget {
   const AppLifecycleObserver({super.key, required this.child});
 
   @override
-  ConsumerState<AppLifecycleObserver> createState() => _AppLifecycleObserverState();
+  ConsumerState<AppLifecycleObserver> createState() =>
+      _AppLifecycleObserverState();
 }
 
 class _AppLifecycleObserverState extends ConsumerState<AppLifecycleObserver>
@@ -38,7 +39,8 @@ class _AppLifecycleObserverState extends ConsumerState<AppLifecycleObserver>
     final settings = ref.read(settingsControllerProvider);
 
     if (state == AppLifecycleState.paused) {
-      // App going to background — schedule notification if timer is running
+      // App going to background — show ongoing notification & schedule
+      // completion notification if timer is running.
       if (!settings.enableNotifications) return;
 
       final timerState = ref.read(timerControllerProvider);
@@ -47,6 +49,13 @@ class _AppLifecycleObserverState extends ConsumerState<AppLifecycleObserver>
             ? timerState.queue[timerState.currentIndex]
             : null;
         if (currentItem != null) {
+          // Silent ongoing notification with live countdown (Android only)
+          notificationService.showOngoingTimerNotification(
+            timerTitle: currentItem.title,
+            endTime: timerState.endTime!,
+          );
+
+          // Scheduled "timer complete" notification at the end time
           notificationService.scheduleTimerNotification(
             endTime: timerState.endTime!,
             timerTitle: currentItem.title,
@@ -54,8 +63,12 @@ class _AppLifecycleObserverState extends ConsumerState<AppLifecycleObserver>
         }
       }
     } else if (state == AppLifecycleState.resumed) {
-      // App returning to foreground — cancel any scheduled background notification
+      // App returning to foreground — cancel background notifications
+      notificationService.cancelOngoingNotification();
       notificationService.cancelScheduledNotifications();
+    } else if (state == AppLifecycleState.detached) {
+      // App fully closed — cancel everything
+      notificationService.cancelAllNotifications();
     }
   }
 
