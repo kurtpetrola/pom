@@ -1,4 +1,4 @@
-package com.example.pom
+package com.kurtpetrola.pom
 
 import io.flutter.embedding.android.FlutterActivity
 
