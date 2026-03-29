@@ -15,7 +15,8 @@ description: Context, guidelines, and strict rules for AI agents working on the 
 - **Target Platforms:** iOS, Android.
 - **Primary Language:** Dart (Latest Stable, SDK ^3.11.1).
 - **Framework:** Flutter (Latest Stable).
-- **Design Philosophy:** Minimalist. No cluttered UI. High contrast, large typography, and subtle animations. Dark charcoal background with configurable accent colors.
+- **Design Philosophy:** Minimalist. No cluttered UI. High contrast, large typography, and subtle animations. Full-screen accent-color background (muted tones) with dark text.
+- **Typography:** Lexend Deca (via `google_fonts`).
 
 ## 2. Tech Stack & Libraries
 
@@ -28,6 +29,7 @@ _Strictly adhere to these choices to keep the app lean but scalable._
 | Notifications | `flutter_local_notifications` | Immediate + scheduled (background) |
 | Timezone | `timezone` + `flutter_timezone` | Required for `zonedSchedule` |
 | Audio | `audioplayers` | Alert chime on timer completion |
+| Typography | `google_fonts` | Lexend Deca font family |
 | IDs | `uuid` | Unique timer item IDs |
 | App Polish | `flutter_native_splash`, `flutter_launcher_icons` | Launch screen, app icons |
 | Linting | `flutter_lints`, `riverpod_lint`, `custom_lint` | Static analysis |
@@ -117,6 +119,7 @@ _Run if modifying annotated Riverpod providers._
 ### Linting & Formatting
 
 - **Lints:** `flutter_lints` + `riverpod_lint`
+- **Enforced rules:** `prefer_relative_imports`, `directives_ordering`, `prefer_single_quotes`
 - **Analyze:** `flutter analyze`
 - **Fix:** `dart fix --apply`
 - **Format:** `dart format .`
@@ -125,6 +128,7 @@ _Run if modifying annotated Riverpod providers._
 
 - **Command:** `flutter test`
 - **Existing tests:** Timer queue initialization, basic state validation.
+- **Test files:** `test/timer_test.dart`, `test/widget_test.dart`.
 - **Test mocks:** `MockAudioService`, `MockNotificationService` in `test/timer_test.dart`.
 
 ## 6. Android Configuration
@@ -141,5 +145,5 @@ _Run if modifying annotated Riverpod providers._
 2. **Audio/Notification Permissions:** When modifying alerts, ensure both iOS `Info.plist` and Android `AndroidManifest.xml` permissions are included, plus runtime permission requests for Android 13+.
 3. **No Over-engineering:** Do not suggest complex databases (Isar, SQLite) or network requests. `shared_preferences` is sufficient.
 4. **Complete Code:** Provide full implementations. No placeholders like `// Add UI here`.
-5. **Notification IDs:** ID `0` = immediate (timer complete while foregrounded). ID `1` = scheduled (background). Keep these separate.
+5. **Notification IDs:** ID `0` = immediate (timer complete while foregrounded). ID `1` = scheduled (background). ID `2` = ongoing (silent countdown while minimized). Keep these separate.
 6. **Provider Overrides:** The `NotificationService` instance is created and initialized in `main.dart`, then overridden in `ProviderScope`. Do not create new instances elsewhere.
