@@ -2,6 +2,14 @@
 
 A minimalist, distraction-free Pomodoro timer app built with Flutter.
 
+## Screenshots
+
+<p align="center">
+  <img src="assets/screenshots/timer_screen.png" alt="Timer Screen" width="230" />
+  &nbsp;&nbsp;&nbsp;
+  <img src="assets/screenshots/settings_screen.png" alt="Settings Screen" width="230" />
+</p>
+
 ## Features
 
 - **Playlist-style timer queue** — Stack work phases, short breaks, and long breaks in any order
