@@ -12,6 +12,8 @@ import 'core/theme/app_theme.dart';
 import 'features/settings/application/settings_controller.dart';
 import 'features/timer/presentation/timer_screen.dart';
 
+/// Main entry point for the application.
+/// Initializes required services before running the app.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -38,6 +40,8 @@ void main() async {
   );
 }
 
+/// Root widget of the application, listens to settings provider
+/// to dynamically rebuild theme changes.
 class PomodoroApp extends ConsumerWidget {
   const PomodoroApp({super.key});
 

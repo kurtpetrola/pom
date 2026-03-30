@@ -1,3 +1,4 @@
+/// Data class representing the user's customizable settings for the Pomodoro app.
 class PomodoroSettings {
   final int workDurationMinutes;
   final int shortBreakDurationMinutes;

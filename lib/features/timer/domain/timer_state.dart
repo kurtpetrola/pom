@@ -1,3 +1,4 @@
+/// Represents an individual timer session in the Pomodoro queue (e.g. Work, Break).
 class TimerItem {
   final String id;
   final String title;
@@ -58,6 +59,7 @@ class TimerItem {
       id.hashCode ^ title.hashCode ^ duration.hashCode ^ isCompleted.hashCode;
 }
 
+/// Immutable state class containing the active Pomodoro timer queue and current status.
 class PomodoroState {
   final List<TimerItem> queue;
   final int currentIndex;

@@ -9,6 +9,7 @@ import '../application/timer_controller.dart';
 import '../domain/timer_state.dart';
 import 'widgets/timer_list_item.dart';
 
+/// The primary screen displaying the active timer, controls, and upcoming playlist.
 class TimerScreen extends ConsumerStatefulWidget {
   const TimerScreen({super.key});
 

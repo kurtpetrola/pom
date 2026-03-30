@@ -2,10 +2,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+/// Provider for the [NotificationService], used to access notification logic across the app.
 final notificationServiceProvider = Provider<NotificationService>((ref) {
   return NotificationService();
 });
 
+/// Service managing system notifications including immediate, ongoing, and scheduled alerts.
 class NotificationService {
   static const int _immediateNotificationId = 0;
   static const int _scheduledNotificationId = 1;
@@ -14,6 +16,7 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
 
+  /// Initializes the local notification plugin and requests necessary permissions.
   Future<void> init() async {
     const androidConfig = AndroidInitializationSettings('@mipmap/ic_launcher');
     const darwinConfig = DarwinInitializationSettings(
@@ -37,6 +40,7 @@ class NotificationService {
     }
   }
 
+  /// Displays an immediate notification for when a timer/session is complete.
   Future<void> showSessionCompleteNotification({
     required String title,
     required String body,

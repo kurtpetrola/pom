@@ -10,9 +10,11 @@ import '../../../../core/services/storage_service.dart';
 import '../../settings/application/settings_controller.dart';
 import '../domain/timer_state.dart';
 
+/// Provider for the [TimerController], exposing the active [PomodoroState].
 final timerControllerProvider =
     NotifierProvider<TimerController, PomodoroState>(TimerController.new);
 
+/// StateNotifier that contains core business logic for the Pomodoro timer queue.
 class TimerController extends Notifier<PomodoroState> {
   static const String _queuePrefsKey = 'timesets_queue';
   Timer? _ticker;
@@ -100,6 +102,7 @@ class TimerController extends Notifier<PomodoroState> {
     prefs.setString(_queuePrefsKey, jsonEncode(jsonList));
   }
 
+  /// Toggles the timer pause/resume state, or starts the next session if finished.
   void toggleTimer() {
     if (state.queue.isEmpty) return;
 
@@ -116,6 +119,7 @@ class TimerController extends Notifier<PomodoroState> {
     }
   }
 
+  /// Begins or resumes countdown of the current timer session.
   void start() {
     if (state.isRunning || state.currentIndex >= state.queue.length) return;
 
@@ -135,12 +139,14 @@ class TimerController extends Notifier<PomodoroState> {
     });
   }
 
+  /// Pauses the active timer session.
   void pause() {
     if (!state.isRunning) return;
     _ticker?.cancel();
     state = state.copyWith(isRunning: false, endTime: () => null);
   }
 
+  /// Stops the timer and resets the current active session to its full duration.
   void reset() {
     _ticker?.cancel();
     if (state.queue.isEmpty) {

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../application/settings_controller.dart';
 
+/// Screen where users can customize their application theme, alerts, and timer preferences.
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 

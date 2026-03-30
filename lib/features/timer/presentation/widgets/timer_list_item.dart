@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../domain/timer_state.dart';
 
+/// A customizable queue item displaying a specific timer's title and duration.
 class TimerListItem extends StatefulWidget {
   final TimerItem item;
   final bool isCurrent;

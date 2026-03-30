@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+/// Central theme configuration for the application, defining colors and typography.
 class AppTheme {
   // Palette base colors
   static const Color charcoalDark = Color(0xFF121212);
@@ -16,6 +16,7 @@ class AppTheme {
   static const Color violet = Color(0xFF9B8BB9);
   static const Color blue = Color(0xFF8FAECB);
 
+  /// Retrieves a theme color constant based on its generic string name.
   static Color getColorFromName(String name) {
     switch (name.toLowerCase()) {
       case 'yellow':
@@ -32,6 +33,7 @@ class AppTheme {
     }
   }
 
+  /// Generates the application's [ThemeData] using the specified [primaryColor].
   static ThemeData getTheme(Color primaryColor) {
     final baseTheme = ThemeData(brightness: Brightness.dark);
     

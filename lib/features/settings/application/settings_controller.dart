@@ -5,11 +5,13 @@ import '../domain/pomodoro_settings.dart';
 
 export '../domain/pomodoro_settings.dart';
 
+/// Provider for the [SettingsController], which exposes current [PomodoroSettings].
 final settingsControllerProvider =
     NotifierProvider<SettingsController, PomodoroSettings>(
       SettingsController.new,
     );
 
+/// StateNotifier responsible for managing user preferences and persisting them via SharedPreferences.
 class SettingsController extends Notifier<PomodoroSettings> {
   @override
   PomodoroSettings build() {
