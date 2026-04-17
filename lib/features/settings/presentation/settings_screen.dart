@@ -169,6 +169,12 @@ class SettingsScreen extends ConsumerWidget {
               value: settings.playSoundWhenCompleted,
               onChanged: controller.updateSound,
             ),
+            const SizedBox(height: 16),
+            _SettingToggleRow(
+              label: 'Keep display on',
+              value: settings.keepDisplayOn,
+              onChanged: controller.updateKeepDisplayOn,
+            ),
             const SizedBox(height: 48),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -6,6 +6,7 @@ import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
 import 'core/services/app_lifecycle_observer.dart';
+import 'core/services/keep_display_on_service.dart';
 import 'core/services/notification_service.dart';
 import 'core/services/storage_service.dart';
 import 'core/theme/app_theme.dart';
@@ -47,6 +48,9 @@ class PomodoroApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Initialize services that should run globally
+    ref.watch(keepDisplayOnProvider);
+
     final settings = ref.watch(settingsControllerProvider);
     final primaryColor = AppTheme.getColorFromName(settings.themeColor);
 

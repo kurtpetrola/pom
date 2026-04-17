@@ -7,6 +7,7 @@ class PomodoroSettings {
   final bool enableNotifications;
   final bool confirmBeforeNextTimer;
   final bool playSoundWhenCompleted;
+  final bool keepDisplayOn;
 
   const PomodoroSettings({
     required this.workDurationMinutes,
@@ -16,6 +17,7 @@ class PomodoroSettings {
     this.enableNotifications = true,
     this.confirmBeforeNextTimer = true,
     this.playSoundWhenCompleted = true,
+    this.keepDisplayOn = false,
   });
 
   PomodoroSettings copyWith({
@@ -26,6 +28,7 @@ class PomodoroSettings {
     bool? enableNotifications,
     bool? confirmBeforeNextTimer,
     bool? playSoundWhenCompleted,
+    bool? keepDisplayOn,
   }) {
     return PomodoroSettings(
       workDurationMinutes: workDurationMinutes ?? this.workDurationMinutes,
@@ -39,6 +42,7 @@ class PomodoroSettings {
           confirmBeforeNextTimer ?? this.confirmBeforeNextTimer,
       playSoundWhenCompleted:
           playSoundWhenCompleted ?? this.playSoundWhenCompleted,
+      keepDisplayOn: keepDisplayOn ?? this.keepDisplayOn,
     );
   }
 }

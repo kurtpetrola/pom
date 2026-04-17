@@ -24,6 +24,7 @@ class SettingsController extends Notifier<PomodoroSettings> {
       enableNotifications: prefs.getBool('enableNotifications') ?? true,
       confirmBeforeNextTimer: prefs.getBool('confirmBeforeNextTimer') ?? true,
       playSoundWhenCompleted: prefs.getBool('playSoundWhenCompleted') ?? true,
+      keepDisplayOn: prefs.getBool('keepDisplayOn') ?? false,
     );
   }
 
@@ -49,6 +50,11 @@ class SettingsController extends Notifier<PomodoroSettings> {
         .read(sharedPreferencesProvider)
         .setBool('playSoundWhenCompleted', enabled);
     state = state.copyWith(playSoundWhenCompleted: enabled);
+  }
+
+  void updateKeepDisplayOn(bool enabled) {
+    ref.read(sharedPreferencesProvider).setBool('keepDisplayOn', enabled);
+    state = state.copyWith(keepDisplayOn: enabled);
   }
 
   // Keep existing methods for backward compatibility or future use if needed,
