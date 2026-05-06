@@ -67,8 +67,8 @@ class _AppLifecycleObserverState extends ConsumerState<AppLifecycleObserver>
       notificationService.cancelOngoingNotification();
       notificationService.cancelScheduledNotifications();
     } else if (state == AppLifecycleState.detached) {
-      // App fully closed — cancel everything
-      notificationService.cancelAllNotifications();
+      // App swiped from recents - ongoing timer notification is cancelled
+      notificationService.cancelOngoingNotification();
     }
   }
 

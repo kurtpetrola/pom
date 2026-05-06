@@ -108,6 +108,10 @@ class NotificationService {
     required String timerTitle,
     required DateTime endTime,
   }) async {
+    // Auto-dismiss when the timer elapses, so if the app process is killed
+    // (e.g. swiped from recents) the notification doesn't persist forever.
+    final msUntilEnd = endTime.difference(DateTime.now()).inMilliseconds;
+
     final androidDetails = AndroidNotificationDetails(
       'pomodoro_ongoing_channel_v2',
       'Timer Progress',
@@ -120,6 +124,7 @@ class NotificationService {
       usesChronometer: true,
       chronometerCountDown: true,
       when: endTime.millisecondsSinceEpoch,
+      timeoutAfter: msUntilEnd > 0 ? msUntilEnd : null,
       playSound: false,
       enableVibration: false,
       silent: true,
